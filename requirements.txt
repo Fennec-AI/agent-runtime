@@ -1,0 +1,7 @@
+langchain-core>=0.3
+langchain-anthropic>=0.3
+python-dotenv>=1.0
+# Optional providers (uncomment to use):
+# langchain-openai>=0.3
+# langchain-google-genai>=2.0
+# langchain-litellm>=0.1

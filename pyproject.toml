@@ -1,0 +1,56 @@
+[project]
+name = "agent_runtime"
+version = "0.1.0"
+description = "Python port of Claude Code's agent-spawning architecture, on LangChain."
+requires-python = ">=3.11"
+readme = "README.md"
+dependencies = [
+    "langchain-core>=0.3",
+    "langchain-anthropic>=0.3",
+    "pydantic>=2",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+otel = [
+    "opentelemetry-api>=1.20",
+    "opentelemetry-sdk>=1.20",
+    "opentelemetry-exporter-otlp-proto-http>=1.20",
+]
+test = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+]
+
+[project.scripts]
+agent-runtime = "cli.main:main"
+
+[tool.pytest.ini_options]
+# auto: every `async def test_*` is treated as an asyncio test without
+# needing the @pytest.mark.asyncio decorator. Reduces boilerplate.
+asyncio_mode = "auto"
+
+# Forbid the deprecated "function" scope default — explicit always.
+asyncio_default_fixture_loop_scope = "function"
+
+# Find tests in tests/ tree
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+# Show slow tests so we can spot regressions in cancellation timing
+addopts = [
+    "-ra",                              # short summary for skips/xfails
+    "--strict-markers",                 # typos in markers fail loudly
+    "--durations=10",                   # 10 slowest tests after each run
+    "-v",                               # verbose — one line per test
+]
+
+# Treat warnings as errors EXCEPT ones we know about
+filterwarnings = [
+    "error",
+    # langchain emits these from deeper layers — not our code
+    "ignore::DeprecationWarning:langchain_core.*",
+    "ignore::PendingDeprecationWarning",
+]
