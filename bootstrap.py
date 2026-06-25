@@ -55,7 +55,12 @@ except ImportError:
 from langchain_anthropic import ChatAnthropic
 
 from agent_runtime import register_model, register_subagent
-from agents import EXPLORE_AGENT, GENERAL_PURPOSE_AGENT, PLAN_AGENT
+from agents import (
+    EXPLORE_AGENT,
+    GENERAL_PURPOSE_AGENT,
+    PLAN_AGENT,
+    SECURITY_REVIEW_AGENT,
+)
 
 
 # ── Register model profiles ─────────────────────────────────────────────
@@ -91,13 +96,16 @@ register_model(
 
 
 # ── Subagent types ──────────────────────────────────────────────────────
-# Register the three built-in subagent kinds. These mirror Claude Code's
-# core built-in agents — same prompts, same tool restrictions. Definitions
-# live under `agents/` so the catalog is its own browseable module.
+# Register the built-in subagent kinds. The first three mirror Claude Code's
+# core built-in agents (same prompts, same tool restrictions); security-review
+# is ported from Claude Code's /security-review command and orchestrates its
+# own finder + verifier fan-out. Definitions live under `agents/` so the
+# catalog is its own browseable module.
 
 register_subagent(GENERAL_PURPOSE_AGENT)
 register_subagent(EXPLORE_AGENT)
 register_subagent(PLAN_AGENT)
+register_subagent(SECURITY_REVIEW_AGENT)
 
 # To add a custom subagent type, define a SubagentDefinition (anywhere)
 # and call register_subagent() here. Re-registration with the same name
